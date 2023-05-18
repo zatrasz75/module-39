@@ -11,3 +11,4 @@ golangci-lint --version
 Запуск:
 
 docker run -it -p 8080:8080 docker.io/zatrasz/module-39:latest
+#
