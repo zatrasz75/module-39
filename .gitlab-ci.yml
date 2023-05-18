@@ -8,8 +8,6 @@ variables:
   PUBLIC_REGISTRY_OWNER: zatrasz
   PUBLIC_REGISTRY_APP_NAME: module-39
   CI_COMMIT_REF_NAME: latest
-  DOCKER_HOST: tcp://docker:2375/
-
 
 build_app:
   stage: build
@@ -36,25 +34,17 @@ lint:
 build_image:stable:
   stage: image
   image: docker:latest
-  variables:
-    DOCKER_HOST: tcp://10.0.2.15:2375
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""
-
   services:
-    - name: docker:20-dind
-      alias: docker
-      command: ["--tls=false"]
-
+    - docker:dind
   script:
     - docker -v
     - docker build -t ${PUBLIC_REGISTRY_HOST}/${PUBLIC_REGISTRY_OWNER}/${PUBLIC_REGISTRY_APP_NAME}:${CI_COMMIT_REF_NAME} ./
     - docker login -u ${PUBLIC_REGISTRY_OWNER} -p ${PUBLIC_REGISTRY_PASSWORD} ${PUBLIC_REGISTRY_HOST}
-    - echo "docker push docker.io/forwork0529/module-39:latest"
+    - echo "docker push docker.io/zatrasz/module-39:latest"
     - docker images
     - docker push ${PUBLIC_REGISTRY_HOST}/${PUBLIC_REGISTRY_OWNER}/${PUBLIC_REGISTRY_APP_NAME}:${CI_COMMIT_REF_NAME}
   only:
-    - main
+    - master
 
 build_image:latest:
   stage: image
